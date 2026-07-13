@@ -104,13 +104,13 @@ const PySparkSvg = ({ className }) => (
     </svg>
 );
 
-const PowerBISvg = ({ className }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="2" y="14" width="4" height="8" rx="1" fill="#F2C811" />
-        <rect x="8" y="9" width="4" height="13" rx="1" fill="#F2C811" opacity="0.8" />
-        <rect x="14" y="4" width="4" height="18" rx="1" fill="#F2C811" opacity="0.6" />
-        <rect x="20" y="7" width="2" height="15" rx="1" fill="#F2C811" opacity="0.4" />
-    </svg>
+// Logo Pandas — logo officiel chargé directement depuis le SVG source de devicon
+const PandasSvg = ({ className }) => (
+    <img
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg"
+        alt="Pandas"
+        className={className}
+    />
 );
 
 // Devicon n'a pas de "supabase-plain" (icône carrée seule), uniquement un wordmark.
@@ -150,6 +150,26 @@ function Navbar() {
 // ─── Composant Hero ──────────────────────────────────────────────────────────
 
 function Hero() {
+    // Chaque icône a maintenant un label utilisé pour l'info-bulle au survol
+    const devIcons = [
+        { label: "Flutter", cls: styles.textFlutter, icon: "devicon-flutter-plain" },
+        { label: "React", cls: styles.textReact, icon: "devicon-react-original" },
+        { label: "HTML5", cls: styles.textHtml, icon: "devicon-html5-plain" },
+        { label: "CSS3", cls: styles.textCss, icon: "devicon-css3-plain" },
+        { label: "Spring Boot", cls: styles.textSpring, icon: "devicon-spring-plain" },
+        { label: "FastAPI", cls: styles.textFastapi, icon: "devicon-fastapi-plain" },
+        { label: "Java", cls: styles.textJava, icon: "devicon-java-plain" },
+        { label: "Laravel", cls: styles.textLaravel, icon: "devicon-laravel-original" },
+        { label: "PHP", cls: styles.textPhp, icon: "devicon-php-plain" },
+        { label: "Git", cls: styles.textGit, icon: "devicon-git-plain" },
+    ];
+
+    const dataIcons = [
+        { label: "PostgreSQL", cls: styles.textSql, icon: "devicon-postgresql-plain" },
+        { label: "Firebase", cls: styles.textFirebase, icon: "devicon-firebase-plain" },
+        { label: "Python", cls: styles.textPython, icon: "devicon-python-plain" },
+    ];
+
     return (
         <section id="about" className={styles.heroSection}>
             <div className={styles.heroContainer}>
@@ -167,7 +187,7 @@ function Hero() {
                         Je connecte ces applications à des bases de données et services cloud
                         (Firebase, Supabase, PostgreSQL) pour livrer des produits fonctionnels
                         de bout en bout, et j'aime aussi structurer et exploiter la donnée
-                        quand un projet le demande (SQL, PySpark).<br /><br />
+                        quand un projet le demande (SQL, PySpark, Pandas).<br /><br />
                         Curieux, rigoureux et motivé, je continue d'apprendre chaque jour
                         pour maîtriser web, mobile et backend, et construire des solutions
                         qui servent vraiment les gens.
@@ -181,39 +201,24 @@ function Hero() {
                             </svg>
                         </a>
                     </div>
-                    {/* Tech shelf : DEV en premier, DATA & CLOUD après */}
+                    {/* Tech shelf : DEV en premier, DATA & CLOUD après — survol = info-bulle avec le nom */}
                     <div className={styles.miniTechShelf}>
-                        {[
-                            { cls: styles.textFlutter, icon: "devicon-flutter-plain" },
-                            { cls: styles.textReact, icon: "devicon-react-original" },
-                            { cls: styles.textHtml, icon: "devicon-html5-plain" },
-                            { cls: styles.textCss, icon: "devicon-css3-plain" },
-                            { cls: styles.textSpring, icon: "devicon-spring-plain" },
-                            { cls: styles.textFastapi, icon: "devicon-fastapi-plain" },
-                            { cls: styles.textJava, icon: "devicon-java-plain" },
-                            { cls: styles.textLaravel, icon: "devicon-laravel-original" },
-                            { cls: styles.textPhp, icon: "devicon-php-plain" },
-                            { cls: styles.textGit, icon: "devicon-git-plain" },
-                        ].map(({ cls, icon }) => (
-                            <div key={icon} className={`${styles.shelfIcon} ${cls}`}>
+                        {devIcons.map(({ cls, icon, label }) => (
+                            <div key={icon} className={`${styles.shelfIcon} ${cls}`} data-tooltip={label} title={label}>
                                 <i className={icon}></i>
                             </div>
                         ))}
-                        <div className={`${styles.shelfIcon} ${styles.textPyspark}`}>
+                        <div className={`${styles.shelfIcon} ${styles.textPyspark}`} data-tooltip="PySpark" title="PySpark">
                             <PySparkSvg className={styles.shelfSvgIcon} />
                         </div>
-                        <div className={`${styles.shelfIcon} ${styles.textPowerbi}`}>
-                            <PowerBISvg className={styles.shelfSvgIcon} />
+                        <div className={`${styles.shelfIcon} ${styles.textPandas}`} data-tooltip="Pandas" title="Pandas">
+                            <PandasSvg className={styles.shelfSvgIcon} />
                         </div>
-                        <div className={`${styles.shelfIcon} ${styles.textSupabase}`}>
+                        <div className={`${styles.shelfIcon} ${styles.textSupabase}`} data-tooltip="Supabase" title="Supabase">
                             <SupabaseSvg className={styles.shelfSvgIcon} />
                         </div>
-                        {[
-                            { cls: styles.textSql, icon: "devicon-postgresql-plain" },
-                            { cls: styles.textFirebase, icon: "devicon-firebase-plain" },
-                            { cls: styles.textPython, icon: "devicon-python-plain" },
-                        ].map(({ cls, icon }) => (
-                            <div key={icon} className={`${styles.shelfIcon} ${cls}`}>
+                        {dataIcons.map(({ cls, icon, label }) => (
+                            <div key={icon} className={`${styles.shelfIcon} ${cls}`} data-tooltip={label} title={label}>
                                 <i className={icon}></i>
                             </div>
                         ))}
@@ -305,10 +310,10 @@ function Skills() {
                         </div>
                         <div className={styles.techBadgePro}>
                             <div className={styles.badgeMain}>
-                                <PowerBISvg className={styles.techSvgIcon} />
-                                Power BI
+                                <PandasSvg className={styles.techSvgIcon} />
+                                Pandas
                             </div>
-                            <span className={`${styles.techLevel} ${styles.textPowerbi}`}>40%</span>
+                            <span className={`${styles.techLevel} ${styles.textPandas}`}>70%</span>
                         </div>
                         {dataSkills.map(({ label, iconCls, colorCls, level }) => (
                             <div key={label} className={styles.techBadgePro}>

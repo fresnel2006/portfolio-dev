@@ -27,8 +27,8 @@
     color: #6DB33F;
 }
 
-.textPowerbi {
-    color: #F2C811;
+.textPandas {
+    color: #E70488;
 }
 
 .textFastapi {
@@ -287,6 +287,7 @@
 }
 
 .shelfIcon {
+    position: relative;
     width: 48px;
     height: 48px;
     background-color: #111;
@@ -302,6 +303,50 @@
 .shelfIcon:hover {
     border-color: #444;
     transform: translateY(-2px);
+}
+
+/* Info-bulle affichant le nom de la technologie au survol */
+.shelfIcon::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background-color: #1a1a1a;
+    color: #ffffff;
+    border: 1px solid #333;
+    padding: 5px 10px;
+    border-radius: 7px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 20;
+}
+
+.shelfIcon::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 3px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #1a1a1a;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease;
+    z-index: 20;
+}
+
+.shelfIcon:hover::after,
+.shelfIcon:hover::before {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
 }
 
 .heroImageWrapper {
