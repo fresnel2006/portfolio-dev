@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 import styles from "./Portfolio.module.css";
 import photo from './assets/ma photo.jpg';
+import Avatar from "./Avatar.jsx";
+import gvipImg from "./assets/projets/gvip.png";
+import starpoleImg from "./assets/projets/starpole.png";
+import kiyotakaImg from "./assets/projets/kiyotaka.png";
+import ecosmartImg from "./assets/projets/ecosmart.png";
+import traducteurImg from "./assets/projets/traducteur.png";
+import allonsbaraImg from "./assets/projets/allonsbara.png";
 // ─── Données ────────────────────────────────────────────────────────────────
 
 const orgLogos = {
@@ -134,7 +141,7 @@ function Navbar() {
                 <nav className={styles.navLinks}>
                     <a href="#about" className={styles.navLinkHidden}>À propos</a>
                     <a href="#skills" className={styles.navLinkHidden}>Compétences</a>
-                    <a href="#projects" className={styles.navLinkHidden}>Projets</a>
+                    <a href="#featured" className={styles.navLinkHidden}>Projets</a>
                     <a href="#certifications" className={styles.navLinkHidden}>Certifications</a>
                     <a href="#experience" className={styles.navLinkHidden}>Expérience</a>
                     <a href="https://github.com/fresnel2006" target="_blank" rel="noreferrer" className={styles.btnGithub}>
@@ -174,9 +181,14 @@ function Hero() {
         <section id="about" className={styles.heroSection}>
             <div className={styles.heroContainer}>
                 <div className={styles.heroInfo}>
-                    <div className={styles.badgeStatus}>
-                        <span className={styles.statusDot}></span>
-                        Disponible pour stages & projets
+                    <div className={styles.heroBadges}>
+                        <div className={styles.badgeStatus}>
+                            <span className={styles.statusDot}></span>
+                            Disponible pour stages & projets
+                        </div>
+                        <a href="#featured" className={styles.badgeNew}>
+                            <span>Nouveau</span> GVIP est en ligne →
+                        </a>
                     </div>
                     <h1 className={styles.heroTitle}>Développeur Fullstack</h1>
                     <p className={styles.heroDescription}>
@@ -193,7 +205,7 @@ function Hero() {
                         qui servent vraiment les gens.
                     </p>
                     <div className={styles.heroActions}>
-                        <a href="#projects" className={styles.btnSecondary}>Voir mes projets</a>
+                        <a href="#featured" className={styles.btnSecondary}>Voir mes projets</a>
                         <a href="https://github.com/fresnel2006" target="_blank" rel="noreferrer" className={styles.btnPrimary}>
                             Voir GitHub
                             <svg className={styles.arrowIcon} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -225,12 +237,12 @@ function Hero() {
                     </div>
                 </div>
                 <div className={styles.heroImageWrapper}>
-                    <div className={styles.heroCard}>
-                        <img
-                            src={photo}
-                            alt="Traore Ange Fresnel"
-                        />
-                    </div>
+                    {/* Portrait pop art : la vraie photo apparaît au survol */}
+                    <Avatar photo={photo} />
+                    <span className={styles.flipHint}>
+                        <i className="fa-solid fa-wand-magic-sparkles"></i>
+                        Passe la souris pour voir la vraie photo
+                    </span>
                 </div>
             </div>
         </section>
@@ -344,36 +356,287 @@ function Skills() {
     );
 }
 
+// ─── Composant FeaturedProject (projet récent : GVIP) ────────────────────────
+
+const GVIP_URL = "https://govip-web-site.vercel.app";
+const GVIP_REPO = "https://github.com/fresnel2006/govip-web-site";
+
+function FeaturedProject() {
+    const espaces = [
+        { icon: "fa-solid fa-calendar-check", title: "Espace client", text: "Réservation d'un créneau de dépôt ou de retrait, suivi et modification du rendez-vous." },
+        { icon: "fa-solid fa-truck-fast", title: "Espace partenaire", text: "Les compagnies de transport gèrent leurs rendez-vous et leur activité." },
+        { icon: "fa-solid fa-user-shield", title: "Espace administrateur", text: "Gestion des compagnies partenaires et suivi global de l'activité." },
+        { icon: "fa-solid fa-chart-line", title: "Tableau des risques", text: "Dashboard alimenté par une API FastAPI externe pour anticiper les incidents." },
+    ];
+
+    const architecture = [
+        { label: "React + Vite", sub: "Interface", icon: "devicon-react-original", cls: styles.textReact },
+        { label: "Firebase", sub: "Auth · Realtime DB · Storage", icon: "devicon-firebase-plain", cls: styles.textFirebase },
+        { label: "Cloud Functions", sub: "E-mails de notification", icon: "fa-solid fa-envelope", cls: styles.textGit },
+        { label: "FastAPI", sub: "Analyse des risques", icon: "devicon-fastapi-plain", cls: styles.textFastapi },
+    ];
+
+    return (
+        <section id="featured" className={styles.sectionFeatured}>
+            <div className={styles.sectionHeader}>
+                <span className={styles.sectionTag}>Projet récent</span>
+                <h2 className={styles.sectionTitle}>GVIP : rendez-vous colis Côte d'Ivoire ⇄ France</h2>
+                <p className={styles.sectionSubtitle}>
+                    Une plateforme web complète, en production, qui organise le dépôt et la
+                    récupération de colis entre Abidjan et la France.
+                </p>
+            </div>
+
+            <div className={`${styles.featuredCard} ${styles.reveal}`}>
+                {/* Aperçu en direct du site dans une fenêtre de navigateur */}
+                <a href={GVIP_URL} target="_blank" rel="noreferrer" className={styles.browserFrame} aria-label="Ouvrir GVIP en direct">
+                    <div className={styles.browserBar}>
+                        <span className={styles.browserDots}><i /><i /><i /></span>
+                        <span className={styles.browserUrl}>
+                            <i className="fa-solid fa-lock"></i> govip-web-site.vercel.app
+                        </span>
+                        <span className={styles.liveBadge}><span className={styles.statusDot}></span>En ligne</span>
+                    </div>
+                    <div className={styles.browserViewport} style={{ backgroundImage: `url(${gvipImg})` }}>
+                        <iframe src={GVIP_URL} title="Aperçu de GVIP" loading="lazy" tabIndex={-1} />
+                        <div className={styles.browserOverlay}>
+                            <span>Ouvrir le site <i className="fa-solid fa-arrow-up-right-from-square"></i></span>
+                        </div>
+                    </div>
+                </a>
+
+                <div className={styles.featuredBody}>
+                    <div className={styles.featuredIntro}>
+                        <h3>Le problème</h3>
+                        <p>
+                            Envoyer un colis entre la Côte d'Ivoire et la France, c'est souvent des
+                            files d'attente, des appels et des messages WhatsApp pour savoir quand
+                            passer. GVIP remplace tout ça par une prise de rendez-vous en ligne,
+                            avec des notifications par e-mail à chaque étape.
+                        </p>
+                        <div className={styles.featuredActions}>
+                            <a href={GVIP_URL} target="_blank" rel="noreferrer" className={styles.btnPrimary}>
+                                Voir le site en direct
+                                <svg className={styles.arrowIcon} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                                </svg>
+                            </a>
+                            <a href={GVIP_REPO} target="_blank" rel="noreferrer" className={styles.btnSecondary}>
+                                <i className="devicon-github-original"></i> Code source
+                            </a>
+                        </div>
+                    </div>
+
+                    <div className={styles.espacesGrid}>
+                        {espaces.map(({ icon, title, text }) => (
+                            <div key={title} className={styles.espaceItem}>
+                                <i className={icon}></i>
+                                <div>
+                                    <h4>{title}</h4>
+                                    <p>{text}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Architecture technique */}
+                <div className={styles.archWrapper}>
+                    <span className={styles.archLabel}>Architecture</span>
+                    <div className={styles.archFlow}>
+                        {architecture.map(({ label, sub, icon, cls }, idx) => (
+                            <div key={label} className={styles.archStep}>
+                                <div className={styles.archNode}>
+                                    <i className={`${icon} ${cls}`}></i>
+                                    <div>
+                                        <strong>{label}</strong>
+                                        <span>{sub}</span>
+                                    </div>
+                                </div>
+                                {idx < architecture.length - 1 && <span className={styles.archArrow}>→</span>}
+                            </div>
+                        ))}
+                    </div>
+                    <div className={styles.featuredStats}>
+                        <div><strong>4</strong><span>espaces utilisateurs</span></div>
+                        <div><strong>2</strong><span>pays reliés</span></div>
+                        <div><strong>100%</strong><span>déployé sur Vercel</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+}
+
 // ─── Composant Projects ──────────────────────────────────────────────────────
 
+const GH = "https://github.com/fresnel2006";
+
+const projects = [
+    {
+        title: "Gestion de production industrielle",
+        category: "web",
+        badge: "Fullstack",
+        text: "Application de gestion d'usine : ateliers, lignes et lots de production, opérateurs et équipes, machines, maintenances, incidents, stock de pièces et fournisseurs. Accès par rôles et tableau de bord.",
+        tags: ["React", "FastAPI", "SQLAlchemy", "PostgreSQL"],
+        links: [
+            { label: "Frontend", url: `${GH}/usine_frontend` },
+            { label: "Backend", url: `${GH}/usine_backend` },
+        ],
+        icon: "fa-solid fa-industry",
+        visual: styles.visualUsine,
+    },
+    {
+        title: "StarPole : entraide de quartier",
+        category: "mobile",
+        badge: "Projet ESATIC",
+        text: "Application mobile pour Abidjan : alertes d'urgence aux voisins, carte, messagerie, appels et notation des aidants. Connexion par code e-mail, notifications push via une API FastAPI et console d'administration web.",
+        tags: ["Flutter", "Firebase", "FastAPI", "React"],
+        links: [
+            { label: "Appli", url: `${GH}/Starpole` },
+            { label: "API", url: `${GH}/starpole_backend` },
+            { label: "Console admin", url: `${GH}/starpole_frontend` },
+        ],
+        img: starpoleImg,
+        bg: "#fdf3f3",
+    },
+    {
+        title: "Kiyotaka's Food",
+        category: "mobile",
+        badge: "Écosystème complet",
+        text: "Commande de repas pour les étudiants de mon école, sans file d'attente. Une appli étudiants, un gestionnaire de commandes en temps réel pour la cuisine et une API FastAPI.",
+        tags: ["Flutter", "Supabase", "FastAPI", "MySQL"],
+        links: [
+            { label: "Appli", url: `${GH}/kiyotaka-s-food` },
+            { label: "Gestionnaire", url: `${GH}/gestionnaire-des-commandes-kiyotaka-s-food` },
+            { label: "API", url: `${GH}/kiyotaka_s_food_api` },
+        ],
+        img: kiyotakaImg,
+        cover: true,
+        bg: "#ffffff",
+    },
+    {
+        title: "EcoSmart : gestion des déchets",
+        category: "mobile",
+        badge: "Hackathon 2026",
+        text: "Les citoyens d'Abidjan signalent les déchets sur une carte Mapbox, avec des zones classées par urgence et des badges. Une seconde appli guide les conducteurs de collecte.",
+        tags: ["Flutter", "Mapbox", "FastAPI", "MySQL"],
+        links: [
+            { label: "Citoyens", url: `${GH}/gestion_dechets_utilisateurs` },
+            { label: "Conducteurs", url: `${GH}/gestion_dechets_conducteur` },
+            { label: "API", url: `${GH}/api_gestion_dechets` },
+        ],
+        img: ecosmartImg,
+        cover: true,
+        bg: "#3f8f3c",
+    },
+    {
+        title: "Traducteur Français → Baoulé",
+        category: "mobile",
+        badge: "Langue ivoirienne",
+        text: "Application mobile qui traduit des mots et expressions du français vers le baoulé, une langue parlée en Côte d'Ivoire.",
+        tags: ["Flutter", "Supabase", "Dart"],
+        links: [{ label: "GitHub", url: `${GH}/traducteur-de-langue` }],
+        img: traducteurImg,
+        bg: "#eef2fb",
+    },
+    {
+        title: "AllonsBara : trouver un répétiteur",
+        category: "mobile",
+        badge: "Géolocalisation",
+        text: "Mise en relation avec des répétiteurs près de chez soi : profils, recherche, carte Mapbox avec géolocalisation et messagerie.",
+        tags: ["Flutter", "Mapbox", "Geolocator"],
+        links: [{ label: "GitHub", url: `${GH}/AllonsBara` }],
+        img: allonsbaraImg,
+        bg: "#f4f7fa",
+    },
+    {
+        title: "Cacao ivoirien & déforestation",
+        category: "data",
+        badge: "Analyse",
+        text: "Analyse du dataset Trase (38 Mo) sur les exportations de cacao : départements, coopératives, exportateurs et déforestation liée. Requêtes SQL directement sur le CSV avec DuckDB.",
+        tags: ["Python", "DuckDB", "Pandas", "SQL"],
+        links: [{ label: "GitHub", url: `${GH}/analyse-cacao-cote-divoire` }],
+        icon: "fa-solid fa-seedling",
+        visual: styles.visualCacao,
+    },
+    {
+        title: "Nettoyage de données réelles",
+        category: "data",
+        badge: "Data cleaning",
+        text: "Série de pipelines de nettoyage : ventes Nike et StockX, dépenses finance et données RH, consoles de jeux vidéo. Normalisation, dédoublonnage, typage et requêtes SQL.",
+        tags: ["Pandas", "PySpark", "DuckDB"],
+        links: [
+            { label: "Finance & RH", url: `${GH}/nettoyage-finance-rh` },
+            { label: "Nike", url: `${GH}/nettoyage-ventes-nike` },
+            { label: "StockX", url: `${GH}/nettoyage-donnees-stockx` },
+        ],
+        icon: "fa-solid fa-broom",
+        visual: styles.visualData,
+    },
+];
+
+const projectTabs = [
+    { label: "Tout", value: "all" },
+    { label: "Web", value: "web" },
+    { label: "Mobile", value: "mobile" },
+    { label: "Data", value: "data" },
+];
+
 function Projects() {
+    const [filter, setFilter] = useState("all");
+    const shown = filter === "all" ? projects : projects.filter((p) => p.category === filter);
+
     return (
         <section id="projects" className={styles.sectionProjects}>
             <div className={styles.sectionHeader}>
                 <span className={styles.sectionTag}>Portfolio</span>
-                <h2 className={styles.sectionTitle}>Projets Sélectionnés</h2>
+                <h2 className={styles.sectionTitle}>Autres projets</h2>
+                <p className={styles.sectionSubtitle}>Applications web, mobiles et projets data, tous disponibles sur GitHub.</p>
             </div>
+
+            <div className={styles.certFilters}>
+                {projectTabs.map(({ label, value }) => {
+                    const count = value === "all" ? projects.length : projects.filter((p) => p.category === value).length;
+                    return (
+                        <button
+                            key={value}
+                            className={`${styles.certFilterBtn} ${filter === value ? styles.certFilterBtnActive : ""}`}
+                            onClick={() => setFilter(value)}
+                        >
+                            {label} ({count})
+                        </button>
+                    );
+                })}
+            </div>
+
             <div className={styles.projectsGrid}>
-                <div className={styles.projectCard}>
-                    <div className={styles.projectImage}>
-                        <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80" alt="Mobile Project" />
-                    </div>
-                    <div className={styles.projectContent}>
-                        <div className={styles.projectTags}><span>Flutter</span><span>Firebase</span><span>Fullstack</span></div>
-                        <h3>Applications Mobiles Multiplateformes</h3>
-                        <p>Conception et architecture de plusieurs applications mobiles natives fluides, connectées à des services cloud temps réel.</p>
-                    </div>
-                </div>
-                <div className={styles.projectCard}>
-                    <div className={styles.projectImage}>
-                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" alt="Data Engineering Project" />
-                    </div>
-                    <div className={styles.projectContent}>
-                        <div className={styles.projectTags}><span>PySpark</span><span>SQL</span><span>Big Data</span></div>
-                        <h3>Pipeline de données & Analytique</h3>
-                        <p>Développement de pipelines de données massives (ETL), requêtage complexe et nettoyage de données pour extraire des indicateurs décisionnels.</p>
-                    </div>
-                </div>
+                {shown.map(({ title, badge, text, tags, links, img, cover, bg, icon, visual }, idx) => (
+                    <article key={title} className={`${styles.projectCard} ${styles.projectAppear}`} style={{ animationDelay: `${idx * 0.06}s` }}>
+                        {img ? (
+                            <div className={styles.projectImage} style={{ backgroundColor: bg }}>
+                                <img src={img} alt={title} className={cover ? styles.imgCover : styles.imgContain} />
+                            </div>
+                        ) : (
+                            <div className={`${styles.projectVisual} ${visual}`}>
+                                <i className={icon}></i>
+                            </div>
+                        )}
+                        <div className={styles.projectContent}>
+                            <span className={styles.projectBadge}>{badge}</span>
+                            <h3>{title}</h3>
+                            <p>{text}</p>
+                            <div className={styles.projectTags}>{tags.map((t) => <span key={t}>{t}</span>)}</div>
+                            <div className={styles.projectLinks}>
+                                {links.map(({ label, url }) => (
+                                    <a key={url} href={url} target="_blank" rel="noreferrer">
+                                        <i className="devicon-github-original"></i> {label}
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+                    </article>
+                ))}
             </div>
         </section>
     );
@@ -543,12 +806,25 @@ export default function Portfolio() {
         document.body.style.color = "#a3a3a3";
         document.body.style.lineHeight = "1.6";
         document.documentElement.style.scrollBehavior = "smooth";
+
+        // Apparition des cartes au défilement
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add(styles.revealVisible);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12 });
+        document.querySelectorAll(`.${styles.reveal}`).forEach((el) => observer.observe(el));
+        return () => observer.disconnect();
     }, []);
 
     return (
         <>
             <Navbar />
             <Hero />
+            <FeaturedProject />
             <Skills />
             <Projects />
             <Certifications />
