@@ -114,7 +114,7 @@ const PySparkSvg = ({ className }) => (
 // Logo Pandas — logo officiel chargé directement depuis le SVG source de devicon
 const PandasSvg = ({ className }) => (
     <img
-        src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg"
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.18.0/icons/pandas/pandas-original.svg"
         alt="Pandas"
         className={className}
     />
@@ -398,7 +398,14 @@ function FeaturedProject() {
                         <span className={styles.liveBadge}><span className={styles.statusDot}></span>En ligne</span>
                     </div>
                     <div className={styles.browserViewport} style={{ backgroundImage: `url(${gvipImg})` }}>
-                        <iframe src={GVIP_URL} title="Aperçu de GVIP" loading="lazy" tabIndex={-1} />
+                        <iframe
+                            src={GVIP_URL}
+                            title="Aperçu de GVIP"
+                            loading="lazy"
+                            tabIndex={-1}
+                            sandbox="allow-scripts allow-same-origin"
+                            referrerPolicy="no-referrer"
+                        />
                         <div className={styles.browserOverlay}>
                             <span>Ouvrir le site <i className="fa-solid fa-arrow-up-right-from-square"></i></span>
                         </div>
@@ -784,22 +791,8 @@ function Footer() {
 // ─── Composant racine ────────────────────────────────────────────────────────
 
 export default function Portfolio() {
-    // Injecter les fonts & icônes depuis le head (une seule fois)
+    // Les polices et icônes sont chargées dans index.html (versions figées + SRI)
     useEffect(() => {
-        const links = [
-            { href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap", rel: "stylesheet" },
-            { href: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css", rel: "stylesheet" },
-            { href: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css", rel: "stylesheet" },
-        ];
-        links.forEach(({ href, rel }) => {
-            if (!document.querySelector(`link[href="${href}"]`)) {
-                const el = document.createElement("link");
-                el.rel = rel;
-                el.href = href;
-                document.head.appendChild(el);
-            }
-        });
-
         // Styles globaux body/html
         document.body.style.fontFamily = "'Inter', sans-serif";
         document.body.style.backgroundColor = "#0b0b0b";
