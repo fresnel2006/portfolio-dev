@@ -11,7 +11,7 @@ import allonsbaraImg from "./assets/projets/allonsbara.png";
 import esaticImg from "./assets/projets/esatic.png";
 import { Loader, Cursor, Marquee, SplitText } from "./Effects.jsx";
 import { useStackCards, prefersReducedMotion } from "./motion.js";
-import { InterfacesShowcase, OverflowProject, StarPoleProject, Services } from "./Sections.jsx";
+import { InterfacesShowcase, OverflowProject, StarPoleProject, EsaticProject, Services } from "./Sections.jsx";
 // ─── Données ────────────────────────────────────────────────────────────────
 
 const orgLogos = {
@@ -132,6 +132,17 @@ const SupabaseSvg = ({ className }) => (
     </svg>
 );
 
+// L'icône devicon de Figma est d'une seule couleur : on garde le logo officiel multicolore.
+const FigmaSvg = ({ className }) => (
+    <svg className={className} viewBox="0 0 38 57" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z" fill="#1ABCFE" />
+        <path d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 1 1-19 0z" fill="#0ACF83" />
+        <path d="M19 0v19h9.5a9.5 9.5 0 1 0 0-19H19z" fill="#FF7262" />
+        <path d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z" fill="#F24E1E" />
+        <path d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z" fill="#A259FF" />
+    </svg>
+);
+
 // ─── Composant Navbar ────────────────────────────────────────────────────────
 
 function Navbar() {
@@ -173,7 +184,7 @@ function Hero({ ready }) {
         { label: "Java", cls: styles.textJava, icon: "devicon-java-plain" },
         { label: "Laravel", cls: styles.textLaravel, icon: "devicon-laravel-original" },
         { label: "PHP", cls: styles.textPhp, icon: "devicon-php-plain" },
-        { label: "Figma", cls: styles.textFigma, icon: "devicon-figma-plain" },
+        { label: "Figma", cls: styles.textFigma, Svg: FigmaSvg },
         { label: "WordPress", cls: styles.textWordpress, icon: "devicon-wordpress-plain" },
         { label: "Git", cls: styles.textGit, icon: "devicon-git-plain" },
     ];
@@ -226,9 +237,9 @@ function Hero({ ready }) {
                     </div>
                     {/* Tech shelf : DEV en premier, DATA & CLOUD après — survol = info-bulle avec le nom */}
                     <div className={styles.miniTechShelf}>
-                        {devIcons.map(({ cls, icon, label }) => (
-                            <div key={icon} className={`${styles.shelfIcon} ${cls}`} data-tooltip={label} title={label}>
-                                <i className={icon}></i>
+                        {devIcons.map(({ cls, icon, label, Svg }) => (
+                            <div key={label} className={`${styles.shelfIcon} ${cls}`} data-tooltip={label} title={label}>
+                                {Svg ? <Svg className={styles.shelfSvgIcon} /> : <i className={icon}></i>}
                             </div>
                         ))}
                         <div className={`${styles.shelfIcon} ${styles.textPyspark}`} data-tooltip="PySpark" title="PySpark">
@@ -277,7 +288,7 @@ function Skills() {
         { label: "JEE", iconCls: "devicon-java-plain", colorCls: styles.textJava },
         { label: "PHP", iconCls: "devicon-php-plain", colorCls: styles.textPhp },
         { label: "WordPress", iconCls: "devicon-wordpress-plain", colorCls: styles.textWordpress },
-        { label: "Figma", iconCls: "devicon-figma-plain", colorCls: styles.textFigma },
+        { label: "Figma", Svg: FigmaSvg },
     ];
 
     // ── Bloc DATA & CLOUD ──
@@ -313,9 +324,9 @@ function Skills() {
                         ))}
                     </div>
                     <div className={`${styles.badgeGridSimple} ${styles.mt12}`}>
-                        {devTools.map(({ label, iconCls, colorCls }) => (
+                        {devTools.map(({ label, iconCls, colorCls, Svg }) => (
                             <div key={label} className={styles.techBadgeSimple}>
-                                <i className={`${iconCls} ${colorCls}`}></i>
+                                {Svg ? <Svg className={styles.techSvgIcon} /> : <i className={`${iconCls} ${colorCls}`}></i>}
                                 {label}
                             </div>
                         ))}
@@ -375,6 +386,7 @@ const GVIP_URL = "https://govip-web-site.vercel.app";
 const GVIP_REPO = "https://github.com/fresnel2006/govip-web-site";
 
 function FeaturedProject() {
+    const [frameLoaded, setFrameLoaded] = useState(false);
     const espaces = [
         { icon: "fa-solid fa-calendar-check", title: "Espace client", text: "Réservation d'un créneau de dépôt ou de retrait, suivi et modification du rendez-vous." },
         { icon: "fa-solid fa-truck-fast", title: "Espace partenaire", text: "Les compagnies de transport gèrent leurs rendez-vous et leur activité." },
@@ -410,7 +422,8 @@ function FeaturedProject() {
                         </span>
                         <span className={styles.liveBadge}><span className={styles.statusDot}></span>En ligne</span>
                     </div>
-                    <div className={styles.browserViewport} style={{ backgroundImage: `url(${gvipImg})` }}>
+                    {/* La capture sert seulement pendant le chargement : elle disparaît une fois le site affiché */}
+                    <div className={styles.browserViewport} style={frameLoaded ? undefined : { backgroundImage: `url(${gvipImg})` }}>
                         <iframe
                             src={GVIP_URL}
                             title="Aperçu de GVIP"
@@ -418,6 +431,8 @@ function FeaturedProject() {
                             tabIndex={-1}
                             sandbox="allow-scripts allow-same-origin"
                             referrerPolicy="no-referrer"
+                            className={frameLoaded ? styles.frameLoaded : ""}
+                            onLoad={() => setFrameLoaded(true)}
                         />
                         <div className={styles.browserOverlay}>
                             <span>Ouvrir le site <i className="fa-solid fa-arrow-up-right-from-square"></i></span>
@@ -888,6 +903,7 @@ export default function Portfolio() {
             <Marquee words={marqueeWords} />
             <FeaturedProject />
             <StarPoleProject />
+            <EsaticProject />
             <OverflowProject />
             <InterfacesShowcase />
             <Services />

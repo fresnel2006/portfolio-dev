@@ -271,6 +271,8 @@ const starpoleFeatures = [
 ];
 
 export function StarPoleProject() {
+    const [frameLoaded, setFrameLoaded] = useState(false);
+
     return (
         <section id="starpole" className={styles.sectionFeatured}>
             <div className={styles.sectionHeader}>
@@ -283,7 +285,7 @@ export function StarPoleProject() {
             </div>
 
             <div className={`${styles.featuredCard} ${styles.reveal}`}>
-                {/* Le site web dans une fenêtre de navigateur, l'appli dans un téléphone */}
+                {/* Le vrai site StarPole en direct, comme pour GVIP */}
                 <div className={styles.featuredVisual}>
                     <a href={STARPOLE_URL} target="_blank" rel="noreferrer" className={styles.browserFrame} aria-label="Ouvrir le site StarPole">
                         <div className={styles.browserBar}>
@@ -293,17 +295,23 @@ export function StarPoleProject() {
                             </span>
                             <span className={styles.liveBadge}><span className={styles.statusDot}></span>En ligne</span>
                         </div>
-                        <div className={styles.browserViewport}>
-                            <img src={starpoleWeb} alt="Site web StarPole : connexion et inscription" className={styles.browserShot} />
+                        {/* La capture sert seulement pendant le chargement */}
+                        <div className={styles.browserViewport} style={frameLoaded ? undefined : { backgroundImage: `url(${starpoleWeb})` }}>
+                            <iframe
+                                src={STARPOLE_URL}
+                                title="Aperçu du site StarPole"
+                                loading="lazy"
+                                tabIndex={-1}
+                                sandbox="allow-scripts allow-same-origin"
+                                referrerPolicy="no-referrer"
+                                className={frameLoaded ? styles.frameLoaded : ""}
+                                onLoad={() => setFrameLoaded(true)}
+                            />
                             <div className={styles.browserOverlay}>
                                 <span>Ouvrir le site <i className="fa-solid fa-arrow-up-right-from-square"></i></span>
                             </div>
                         </div>
                     </a>
-                    <div className={`${styles.showcasePhone} ${styles.featuredPhone}`}>
-                        <span className={styles.phoneNotch} />
-                        <img src={starpolePhone} alt="Appli StarPole : alertes à proximité" />
-                    </div>
                 </div>
 
                 <div className={styles.featuredBody}>
@@ -360,6 +368,123 @@ export function StarPoleProject() {
                         <div><strong>3</strong><span>interfaces : appli, site, admin</span></div>
                         <div><strong>6</strong><span>fonctionnalités clés</span></div>
                         <div><strong>Temps réel</strong><span>appli ⇄ site web</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+}
+
+// ─── Projet phare n°4 : ESATIC Évaluations ───────────────────────────────────
+
+const ESATIC_URL = "https://esatic-nu.vercel.app";
+
+const esaticFeatures = [
+    { icon: "fa-solid fa-code", title: "Éditeur & terminal", text: "Un vrai éditeur de code (Monaco) et un terminal pour chaque question." },
+    { icon: "fa-solid fa-play", title: "Code exécuté en direct", text: "Python, JavaScript, PHP, SQL et C tournent dans le navigateur, isolés." },
+    { icon: "fa-solid fa-wand-magic-sparkles", title: "Correction automatique", text: "QCM, tests cachés et requêtes SQL corrigés en un clic." },
+    { icon: "fa-solid fa-shield-halved", title: "Examens sécurisés", text: "Plein écran surveillé : avertissement, puis copie envoyée automatiquement." },
+    { icon: "fa-solid fa-file-pdf", title: "Bulletins PDF", text: "Moyennes, rang et code de vérification d'authenticité." },
+    { icon: "fa-solid fa-users", title: "4 espaces", text: "Étudiant, enseignant, surveillant et administration." },
+];
+
+export function EsaticProject() {
+    const [frameLoaded, setFrameLoaded] = useState(false);
+
+    return (
+        <section id="esatic" className={styles.sectionFeatured}>
+            <div className={styles.sectionHeader}>
+                <span className={styles.sectionTag}>Projet phare</span>
+                <h2 className={styles.sectionTitle}>ESATIC Évaluations : les examens sur ordinateur</h2>
+                <p className={styles.sectionSubtitle}>
+                    Plateforme d'examens et de devoirs en ligne de l'ESATIC,
+                    en ligne et testable en direct.
+                </p>
+            </div>
+
+            <div className={`${styles.featuredCard} ${styles.reveal}`}>
+                {/* Le vrai site en direct ; la capture sert pendant le chargement */}
+                <div className={styles.featuredVisual}>
+                    <a href={ESATIC_URL} target="_blank" rel="noreferrer" className={styles.browserFrame} aria-label="Ouvrir ESATIC Évaluations">
+                        <div className={styles.browserBar}>
+                            <span className={styles.browserDots}><i /><i /><i /></span>
+                            <span className={styles.browserUrl}>
+                                <i className="fa-solid fa-lock"></i> esatic-nu.vercel.app
+                            </span>
+                            <span className={styles.liveBadge}><span className={styles.statusDot}></span>En ligne</span>
+                        </div>
+                        <div className={styles.browserViewport} style={frameLoaded ? undefined : { backgroundImage: `url(${esaticImg})` }}>
+                            <iframe
+                                src={ESATIC_URL}
+                                title="Aperçu d'ESATIC Évaluations"
+                                loading="lazy"
+                                tabIndex={-1}
+                                sandbox="allow-scripts allow-same-origin"
+                                referrerPolicy="no-referrer"
+                                className={frameLoaded ? styles.frameLoaded : ""}
+                                onLoad={() => setFrameLoaded(true)}
+                            />
+                            <div className={styles.browserOverlay}>
+                                <span>Ouvrir le site <i className="fa-solid fa-arrow-up-right-from-square"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div className={styles.featuredBody}>
+                    <div className={styles.featuredIntro}>
+                        <h3>Le problème</h3>
+                        <RevealWords text="Un examen de programmation sur papier, c'est du code qu'on ne peut pas tester, et des heures de correction pour les enseignants. Ici, les étudiants composent sur ordinateur, lancent leur code et la plateforme corrige automatiquement." />
+                        <div className={styles.featuredActions}>
+                            <a href={ESATIC_URL} target="_blank" rel="noreferrer" className={styles.btnPrimary}>
+                                Voir le site en direct
+                                <svg className={styles.arrowIcon} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                                </svg>
+                            </a>
+                            <a href={`${GH}/ESATIC`} target="_blank" rel="noreferrer" className={styles.btnSecondary}>
+                                <i className="devicon-github-original"></i> Code source
+                            </a>
+                        </div>
+                    </div>
+                    <div className={styles.espacesGrid}>
+                        {esaticFeatures.map(({ icon, title, text }) => (
+                            <div key={title} className={styles.espaceItem}>
+                                <i className={icon}></i>
+                                <div>
+                                    <h4>{title}</h4>
+                                    <p>{text}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div className={styles.archWrapper}>
+                    <span className={styles.archLabel}>Architecture</span>
+                    <div className={styles.archFlow}>
+                        {[
+                            { label: "React + Vite", sub: "Interface", icon: "devicon-react-original", cls: styles.textReact },
+                            { label: "Monaco Editor", sub: "Éditeur de code", icon: "devicon-vscode-plain", cls: styles.textCss },
+                            { label: "Web Workers", sub: "Pyodide · sql.js", icon: "devicon-python-plain", cls: styles.textPython },
+                            { label: "Vercel", sub: "Hébergement", icon: "devicon-vercel-original", cls: styles.textNextjs },
+                        ].map(({ label, sub, icon, cls }, idx, arr) => (
+                            <div key={label} className={styles.archStep}>
+                                <div className={styles.archNode}>
+                                    <i className={`${icon} ${cls}`}></i>
+                                    <div>
+                                        <strong>{label}</strong>
+                                        <span>{sub}</span>
+                                    </div>
+                                </div>
+                                {idx < arr.length - 1 && <span className={styles.archArrow}>→</span>}
+                            </div>
+                        ))}
+                    </div>
+                    <div className={styles.featuredStats}>
+                        <div><strong>4</strong><span>espaces utilisateurs</span></div>
+                        <div><strong>5</strong><span>langages exécutés</span></div>
+                        <div><strong>Auto</strong><span>correction des copies</span></div>
                     </div>
                 </div>
             </div>
