@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import styles from "./Portfolio.module.css";
 import photo from './assets/ma photo.jpg';
 import Avatar from "./Avatar.jsx";
@@ -8,6 +8,10 @@ import kiyotakaImg from "./assets/projets/kiyotaka.png";
 import ecosmartImg from "./assets/projets/ecosmart.png";
 import traducteurImg from "./assets/projets/traducteur.png";
 import allonsbaraImg from "./assets/projets/allonsbara.png";
+import esaticImg from "./assets/projets/esatic.png";
+import { Loader, Cursor, Marquee, SplitText } from "./Effects.jsx";
+import { useStackCards, prefersReducedMotion } from "./motion.js";
+import { InterfacesShowcase, OverflowProject, StarPoleProject, Services } from "./Sections.jsx";
 // ─── Données ────────────────────────────────────────────────────────────────
 
 const orgLogos = {
@@ -142,6 +146,7 @@ function Navbar() {
                     <a href="#about" className={styles.navLinkHidden}>À propos</a>
                     <a href="#skills" className={styles.navLinkHidden}>Compétences</a>
                     <a href="#featured" className={styles.navLinkHidden}>Projets</a>
+                    <a href="#interfaces" className={styles.navLinkHidden}>Interfaces</a>
                     <a href="#certifications" className={styles.navLinkHidden}>Certifications</a>
                     <a href="#experience" className={styles.navLinkHidden}>Expérience</a>
                     <a href="https://github.com/fresnel2006" target="_blank" rel="noreferrer" className={styles.btnGithub}>
@@ -156,7 +161,7 @@ function Navbar() {
 
 // ─── Composant Hero ──────────────────────────────────────────────────────────
 
-function Hero() {
+function Hero({ ready }) {
     // Chaque icône a maintenant un label utilisé pour l'info-bulle au survol
     const devIcons = [
         { label: "Flutter", cls: styles.textFlutter, icon: "devicon-flutter-plain" },
@@ -168,6 +173,8 @@ function Hero() {
         { label: "Java", cls: styles.textJava, icon: "devicon-java-plain" },
         { label: "Laravel", cls: styles.textLaravel, icon: "devicon-laravel-original" },
         { label: "PHP", cls: styles.textPhp, icon: "devicon-php-plain" },
+        { label: "Figma", cls: styles.textFigma, icon: "devicon-figma-plain" },
+        { label: "WordPress", cls: styles.textWordpress, icon: "devicon-wordpress-plain" },
         { label: "Git", cls: styles.textGit, icon: "devicon-git-plain" },
     ];
 
@@ -178,7 +185,7 @@ function Hero() {
     ];
 
     return (
-        <section id="about" className={styles.heroSection}>
+        <section id="about" className={`${styles.heroSection} ${ready ? styles.heroReady : ""}`}>
             <div className={styles.heroContainer}>
                 <div className={styles.heroInfo}>
                     <div className={styles.heroBadges}>
@@ -190,7 +197,11 @@ function Hero() {
                             <span>Nouveau</span> GVIP est en ligne →
                         </a>
                     </div>
-                    <h1 className={styles.heroTitle}>Développeur Fullstack</h1>
+                    <span className={styles.monoLabel}>{"// web · mobile · data — Abidjan"}</span>
+                    <h1 className={styles.heroTitle}>
+                        <span className={styles.heroLine}><SplitText text="Développeur" delay={0.1} /></span>
+                        <span className={`${styles.heroLine} ${styles.heroAccent}`}><SplitText text="Fullstack" delay={0.5} /></span>
+                    </h1>
                     <p className={styles.heroDescription}>
                         Passionné par le développement, je suis en formation en informatique et je
                         construis des applications web et mobiles complètes des interfaces
@@ -265,6 +276,8 @@ function Skills() {
         { label: "Laravel", iconCls: "devicon-laravel-original", colorCls: styles.textLaravel },
         { label: "JEE", iconCls: "devicon-java-plain", colorCls: styles.textJava },
         { label: "PHP", iconCls: "devicon-php-plain", colorCls: styles.textPhp },
+        { label: "WordPress", iconCls: "devicon-wordpress-plain", colorCls: styles.textWordpress },
+        { label: "Figma", iconCls: "devicon-figma-plain", colorCls: styles.textFigma },
     ];
 
     // ── Bloc DATA & CLOUD ──
@@ -483,9 +496,9 @@ const projects = [
     {
         title: "Gestion de production industrielle",
         category: "web",
-        badge: "Fullstack",
+        badge: "Projet Agile ESATIC",
         text: "Application de gestion d'usine : ateliers, lignes et lots de production, opérateurs et équipes, machines, maintenances, incidents, stock de pièces et fournisseurs. Accès par rôles et tableau de bord.",
-        tags: ["React", "FastAPI", "SQLAlchemy", "PostgreSQL"],
+        tags: ["React", "FastAPI", "SQLAlchemy", "Supabase"],
         links: [
             { label: "Frontend", url: `${GH}/usine_frontend` },
             { label: "Backend", url: `${GH}/usine_backend` },
@@ -494,14 +507,29 @@ const projects = [
         visual: styles.visualUsine,
     },
     {
+        title: "ESATIC Évaluations",
+        category: "web",
+        badge: "En ligne",
+        text: "Plateforme d'examens et de devoirs en ligne de l'ESATIC : les étudiants composent sur ordinateur, les enseignants créent et corrigent, les surveillants suivent les sessions. Exécution de code C, JavaScript, Python et SQL dans le navigateur.",
+        tags: ["React", "Vite", "Monaco Editor", "Vercel"],
+        links: [
+            { label: "Voir en ligne", url: "https://esatic-nu.vercel.app", live: true },
+            { label: "GitHub", url: `${GH}/ESATIC` },
+        ],
+        img: esaticImg,
+        cover: true,
+        bg: "#ffffff",
+    },
+    {
         title: "StarPole : entraide de quartier",
         category: "mobile",
         badge: "Projet ESATIC",
-        text: "Application mobile pour Abidjan : alertes d'urgence aux voisins, carte, messagerie, appels et notation des aidants. Connexion par code e-mail, notifications push via une API FastAPI et console d'administration web.",
+        text: "Application mobile pour Abidjan : alertes d'urgence aux voisins, carte, messagerie, appels et notation des aidants. Connexion par code e-mail et notifications push via une API FastAPI. Version web synchronisée avec l'appli, et console d'administration : tableau de bord, modération des alertes, carte Mapbox, export CSV.",
         tags: ["Flutter", "Firebase", "FastAPI", "React"],
         links: [
             { label: "Appli", url: `${GH}/Starpole` },
             { label: "API", url: `${GH}/starpole_backend` },
+            { label: "Site web en ligne", url: "https://starpole-web.web.app", live: true },
             { label: "Console admin", url: `${GH}/starpole_frontend` },
         ],
         img: starpoleImg,
@@ -590,14 +618,18 @@ const projectTabs = [
     { label: "Data", value: "data" },
 ];
 
+const categoryLabels = { web: "Web", mobile: "Mobile", data: "Data" };
+
 function Projects() {
     const [filter, setFilter] = useState("all");
+    const stackRef = useRef(null);
     const shown = filter === "all" ? projects : projects.filter((p) => p.category === filter);
+    useStackCards(stackRef, [filter]);
 
     return (
         <section id="projects" className={styles.sectionProjects}>
             <div className={styles.sectionHeader}>
-                <span className={styles.sectionTag}>Portfolio</span>
+                <span className={styles.sectionTag}>Archives</span>
                 <h2 className={styles.sectionTitle}>Autres projets</h2>
                 <p className={styles.sectionSubtitle}>Applications web, mobiles et projets data, tous disponibles sur GitHub.</p>
             </div>
@@ -617,30 +649,38 @@ function Projects() {
                 })}
             </div>
 
-            <div className={styles.projectsGrid}>
-                {shown.map(({ title, badge, text, tags, links, img, cover, bg, icon, visual }, idx) => (
-                    <article key={title} className={`${styles.projectCard} ${styles.projectAppear}`} style={{ animationDelay: `${idx * 0.06}s` }}>
-                        {img ? (
-                            <div className={styles.projectImage} style={{ backgroundColor: bg }}>
-                                <img src={img} alt={title} className={cover ? styles.imgCover : styles.imgContain} />
+            <div ref={stackRef} className={styles.stack}>
+                {shown.map(({ title, category, badge, text, tags, links, img, cover, bg, icon, visual }, idx) => (
+                    <article key={title} className={styles.stackCard} style={{ top: `${96 + idx * 16}px` }}>
+                        <div className={styles.stackInner}>
+                            {img ? (
+                                <div className={styles.stackMedia} style={{ backgroundColor: bg }}>
+                                    <img src={img} alt={title} className={cover ? styles.imgCover : styles.imgContain} />
+                                </div>
+                            ) : (
+                                <div className={`${styles.stackMedia} ${visual}`}>
+                                    <i className={icon}></i>
+                                </div>
+                            )}
+                            <div className={styles.stackContent}>
+                                <span className={styles.stackMeta}>
+                                    {String(idx + 1).padStart(2, "0")} / {String(shown.length).padStart(2, "0")} · {categoryLabels[category]}
+                                </span>
+                                <span className={styles.projectBadge}>{badge}</span>
+                                <h3>{title}</h3>
+                                <p>{text}</p>
+                                <div className={styles.projectTags}>{tags.map((t) => <span key={t}>{t}</span>)}</div>
+                                <div className={styles.projectLinks}>
+                                    {links.map(({ label, url, live }) => (
+                                        <a key={url} href={url} target="_blank" rel="noreferrer">
+                                            <i className={live ? "fa-solid fa-arrow-up-right-from-square" : "devicon-github-original"}></i> {label}
+                                        </a>
+                                    ))}
+                                </div>
                             </div>
-                        ) : (
-                            <div className={`${styles.projectVisual} ${visual}`}>
-                                <i className={icon}></i>
-                            </div>
-                        )}
-                        <div className={styles.projectContent}>
-                            <span className={styles.projectBadge}>{badge}</span>
-                            <h3>{title}</h3>
-                            <p>{text}</p>
-                            <div className={styles.projectTags}>{tags.map((t) => <span key={t}>{t}</span>)}</div>
-                            <div className={styles.projectLinks}>
-                                {links.map(({ label, url }) => (
-                                    <a key={url} href={url} target="_blank" rel="noreferrer">
-                                        <i className="devicon-github-original"></i> {label}
-                                    </a>
-                                ))}
-                            </div>
+                            <a href={links[0].url} target="_blank" rel="noreferrer" className={styles.stackArrow} aria-label={`Ouvrir ${title}`}>
+                                <i className="fa-solid fa-arrow-right"></i>
+                            </a>
                         </div>
                     </article>
                 ))}
@@ -784,13 +824,32 @@ function Footer() {
                     <a href="https://linkedin.com/in/traore-ange-fresnel-a8324535b" target="_blank" rel="noreferrer">LinkedIn</a>
                 </div>
             </div>
+            <div className={styles.footerGiant} aria-hidden="true">Fresnel</div>
         </footer>
     );
 }
 
 // ─── Composant racine ────────────────────────────────────────────────────────
 
+// L'écran de chargement ne s'affiche qu'une fois par session
+const shouldShowLoader = () => {
+    try {
+        return !prefersReducedMotion() && !sessionStorage.getItem("loaderVu");
+    } catch {
+        return false;
+    }
+};
+
+const marqueeWords = ["Web", "Mobile", "Data", "Flutter", "React", "FastAPI", "Firebase", "PySpark"];
+
 export default function Portfolio() {
+    const [loading, setLoading] = useState(shouldShowLoader);
+
+    const finishLoading = useCallback(() => {
+        try { sessionStorage.setItem("loaderVu", "1"); } catch { /* navigation privée */ }
+        setLoading(false);
+    }, []);
+
     // Les polices et icônes sont chargées dans index.html (versions figées + SRI)
     useEffect(() => {
         // Styles globaux body/html
@@ -800,7 +859,7 @@ export default function Portfolio() {
         document.body.style.lineHeight = "1.6";
         document.documentElement.style.scrollBehavior = "smooth";
 
-        // Apparition des cartes au défilement
+        // Apparition des cartes et des titres de section au défilement
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
@@ -809,15 +868,29 @@ export default function Portfolio() {
                 }
             });
         }, { threshold: 0.12 });
-        document.querySelectorAll(`.${styles.reveal}`).forEach((el) => observer.observe(el));
+        document
+            .querySelectorAll(`.${styles.reveal}, .${styles.sectionHeader}, .${styles.serviceRow}`)
+            .forEach((el) => observer.observe(el));
         return () => observer.disconnect();
     }, []);
 
+    // Pas de défilement pendant l'écran de chargement
+    useEffect(() => {
+        document.body.style.overflow = loading ? "hidden" : "";
+    }, [loading]);
+
     return (
         <>
+            {loading && <Loader onDone={finishLoading} />}
+            <Cursor />
             <Navbar />
-            <Hero />
+            <Hero ready={!loading} />
+            <Marquee words={marqueeWords} />
             <FeaturedProject />
+            <StarPoleProject />
+            <OverflowProject />
+            <InterfacesShowcase />
+            <Services />
             <Skills />
             <Projects />
             <Certifications />

@@ -694,6 +694,7 @@
 
 .certItem {
     padding: 18px;
+    box-sizing: border-box;
     background-color: #0f0f0f;
     border: 1px solid #1a1a1a;
     border-radius: 14px;
@@ -1790,4 +1791,945 @@ a.projectCard {
     height: 100%;
     object-fit: cover;
     filter: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   REFONTE VISUELLE : titres marqués, libellés façon code, animations
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Libellés façon code et titres de section ── */
+.monoLabel,
+.sectionTag,
+.stackMeta,
+.serviceNum,
+.showcaseCaption span,
+.loaderLines {
+    font-family: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+.monoLabel {
+    display: block;
+    color: #10b981;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    margin-bottom: 14px;
+}
+
+.sectionTag {
+    background: none;
+    border: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: lowercase;
+    color: #10b981;
+}
+
+.sectionTag::before {
+    content: "// ";
+    opacity: 0.6;
+}
+
+.sectionTitle {
+    font-size: clamp(1.7rem, 4vw, 2.9rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+}
+
+/* Les titres de section apparaissent au défilement */
+.sectionHeader,
+.serviceRow {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.sectionHeader.revealVisible,
+.serviceRow.revealVisible {
+    opacity: 1;
+    transform: none;
+}
+
+/* ── Hero : grand titre animé lettre par lettre ── */
+.heroTitle {
+    font-size: clamp(2.2rem, 6vw, 4.8rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.045em;
+    line-height: 0.98;
+}
+
+.heroLine {
+    display: block;
+}
+
+.heroAccent {
+    color: #10b981;
+}
+
+.split {
+    display: inline;
+}
+
+/* Un mot ne se coupe jamais ; la marge garde les accents visibles */
+.splitWord {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-top: 0.14em;
+    margin-top: -0.14em;
+    vertical-align: bottom;
+}
+
+.splitLetter {
+    display: inline-block;
+    transform: translateY(110%) rotate(8deg);
+    opacity: 0;
+}
+
+.heroReady .splitLetter {
+    animation: letterUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes letterUp {
+    to {
+        transform: none;
+        opacity: 1;
+    }
+}
+
+/* ── Écran de chargement ── */
+.loader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background-color: #0b0b0b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.65s cubic-bezier(0.7, 0, 0.3, 1), opacity 0.65s ease;
+}
+
+.loaderLeave {
+    transform: translateY(-100%);
+    opacity: 0.6;
+}
+
+.loaderLines {
+    position: absolute;
+    top: 28px;
+    left: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.8rem;
+    color: #10b981;
+}
+
+.loaderCount {
+    font-size: clamp(5rem, 18vw, 12rem);
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.06em;
+    font-variant-numeric: tabular-nums;
+}
+
+.loaderCount small {
+    font-size: 0.35em;
+    color: #10b981;
+    margin-left: 0.1em;
+}
+
+.loaderBar {
+    position: absolute;
+    left: 28px;
+    right: 28px;
+    bottom: 28px;
+    height: 2px;
+    background-color: #1a1a1a;
+}
+
+.loaderBar span {
+    display: block;
+    height: 100%;
+    background-color: #10b981;
+    box-shadow: 0 0 12px #10b981;
+    transform-origin: left;
+}
+
+/* ── Curseur personnalisé ── */
+.cursorDot,
+.cursorRing {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9998;
+    pointer-events: none;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.cursorDot {
+    width: 8px;
+    height: 8px;
+    margin: -4px 0 0 -4px;
+    background-color: #10b981;
+}
+
+.cursorRing {
+    width: 36px;
+    height: 36px;
+    margin: -18px 0 0 -18px;
+    border: 1.5px solid rgba(16, 185, 129, 0.6);
+    transition: opacity 0.3s, width 0.3s, height 0.3s, margin 0.3s, background-color 0.3s;
+}
+
+.cursorVisible {
+    opacity: 1;
+}
+
+.cursorHover {
+    width: 64px;
+    height: 64px;
+    margin: -32px 0 0 -32px;
+    background-color: rgba(16, 185, 129, 0.12);
+    border-color: #10b981;
+}
+
+/* ── Bandeau de mots qui défile ── */
+.marquee {
+    overflow: hidden;
+    padding: 34px 0;
+    border-top: 1px solid #161616;
+    border-bottom: 1px solid #161616;
+}
+
+.marqueeTrack {
+    display: flex;
+    width: max-content;
+    animation: marquee 32s linear infinite;
+}
+
+.marquee:hover .marqueeTrack {
+    animation-play-state: paused;
+}
+
+.marqueeItem {
+    display: inline-flex;
+    align-items: center;
+    gap: 36px;
+    padding-right: 36px;
+    font-size: clamp(2.6rem, 7vw, 6rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.marqueeFill {
+    color: #f5f5f5;
+}
+
+.marqueeOutline {
+    color: transparent;
+    -webkit-text-stroke: 1.5px #3f3f3f;
+}
+
+.marqueeStar {
+    color: #10b981;
+    font-size: 0.4em;
+}
+
+@keyframes marquee {
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* ── Texte révélé mot par mot ── */
+.revealWords span {
+    color: #3a3a3a;
+    transition: color 0.35s ease;
+}
+
+.revealWords span.wordOn {
+    color: #e5e5e5;
+}
+
+/* ── Overflow : eau qui ondule ── */
+.waterVisual {
+    position: relative;
+    min-height: 380px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #1f2a33;
+    background: radial-gradient(circle at 50% 30%, rgba(59, 130, 246, 0.18), transparent 60%), #0c1219;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.waterLogo {
+    position: relative;
+    z-index: 2;
+    width: 34%;
+    max-width: 180px;
+    filter: drop-shadow(0 20px 40px rgba(59, 130, 246, 0.35));
+    animation: bob 4s ease-in-out infinite;
+}
+
+@keyframes bob {
+
+    0%,
+    100% {
+        transform: translateY(-6px);
+    }
+
+    50% {
+        transform: translateY(6px);
+    }
+}
+
+.wave {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 200%;
+    height: 42%;
+    animation: waveMove 9s linear infinite;
+}
+
+.waveBack {
+    fill: rgba(59, 130, 246, 0.28);
+    height: 48%;
+    animation-duration: 13s;
+    animation-direction: reverse;
+}
+
+.waveFront {
+    z-index: 3;
+    fill: rgba(16, 185, 129, 0.3);
+}
+
+@keyframes waveMove {
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+.waterBadge {
+    position: absolute;
+    z-index: 4;
+    left: 16px;
+    bottom: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(6px);
+    padding: 6px 12px;
+    border-radius: 9999px;
+}
+
+/* ── Vitrine des interfaces ── */
+.sectionShowcase {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 96px 24px 120px;
+    border-top: 1px solid #141414;
+}
+
+.showcaseTabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 48px;
+}
+
+.showcaseTab {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 12px 20px;
+    border-radius: 14px;
+    background-color: #111;
+    border: 1px solid #222;
+    color: #a3a3a3;
+    font: inherit;
+    cursor: pointer;
+    transition: border-color 0.25s, background-color 0.25s;
+}
+
+.showcaseTab strong {
+    color: #fff;
+    font-size: 0.95rem;
+}
+
+.showcaseTab span {
+    font-size: 0.75rem;
+}
+
+.showcaseTab:hover {
+    border-color: #333;
+}
+
+.showcaseTabActive {
+    border-color: #10b981;
+    background-color: rgba(16, 185, 129, 0.08);
+}
+
+.showcaseStage {
+    position: relative;
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.showcaseLaptop {
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #262626;
+    background-color: #0b0b0b;
+    box-shadow: 0 50px 100px -30px rgba(0, 0, 0, 0.9), 0 0 120px -40px rgba(16, 185, 129, 0.4);
+}
+
+.showcaseScreen {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background-color: #111;
+}
+
+.showcaseScreen img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    opacity: 0;
+    transform: scale(1.04);
+    transition: opacity 0.8s ease, transform 6s ease-out;
+}
+
+.showcaseScreen img.showcaseImgActive {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Ligne lumineuse qui balaie l'écran à chaque changement */
+.showcaseScan {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 2px;
+    background-color: #10b981;
+    box-shadow: 0 0 18px 4px rgba(16, 185, 129, 0.6);
+    animation: scan 1.1s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes scan {
+    from {
+        top: 0;
+        opacity: 1;
+    }
+
+    to {
+        top: 100%;
+        opacity: 0;
+    }
+}
+
+.showcasePhone {
+    position: absolute;
+    right: -28px;
+    bottom: -48px;
+    width: 23%;
+    max-width: 210px;
+    aspect-ratio: 9 / 19;
+    border: 7px solid #1c1c1c;
+    border-radius: 30px;
+    overflow: hidden;
+    background-color: #000;
+    box-shadow: 0 30px 60px -10px rgba(0, 0, 0, 0.9);
+    animation: phoneIn 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.showcasePhone img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+}
+
+.phoneNotch {
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    width: 34%;
+    height: 14px;
+    transform: translateX(-50%);
+    background-color: #000;
+    border-radius: 9999px;
+}
+
+@keyframes phoneIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px) rotate(4deg);
+    }
+}
+
+.showcaseFooter {
+    max-width: 960px;
+    margin: 72px auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.showcaseCaption {
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
+    color: #a3a3a3;
+    font-size: 0.95rem;
+    max-width: 640px;
+}
+
+.showcaseCaption span {
+    color: #10b981;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.showcaseFooter .btnSecondary {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+}
+
+@media (max-width: 700px) {
+    .showcasePhone {
+        right: 6px;
+        bottom: -28px;
+        width: 30%;
+        border-width: 5px;
+        border-radius: 20px;
+    }
+
+    .showcaseFooter {
+        margin-top: 48px;
+    }
+}
+
+/* ── Ce que je fais : lignes qui se remplissent au survol ── */
+.sectionServices {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 96px 24px;
+    border-top: 1px solid #141414;
+}
+
+.serviceList {
+    border-top: 1px solid #1f1f1f;
+}
+
+.serviceRow {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 32px 20px;
+    border-bottom: 1px solid #1f1f1f;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.serviceRow::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-color: #10b981;
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.45s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+.serviceRow:hover::before {
+    transform: scaleY(1);
+}
+
+.serviceNum {
+    font-size: 0.8rem;
+    color: #10b981;
+}
+
+.serviceName {
+    font-size: clamp(2.2rem, 6vw, 4.6rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.045em;
+    line-height: 1;
+    color: #fff;
+}
+
+.serviceText strong {
+    display: block;
+    color: #fff;
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+}
+
+.serviceText p {
+    color: #8a8a8a;
+    font-size: 0.92rem;
+    margin-bottom: 8px;
+}
+
+.serviceText span {
+    font-size: 0.8rem;
+    color: #10b981;
+}
+
+.serviceRow:hover .serviceNum,
+.serviceRow:hover .serviceName,
+.serviceRow:hover .serviceText strong,
+.serviceRow:hover .serviceText p,
+.serviceRow:hover .serviceText span {
+    color: #000;
+}
+
+.serviceNum,
+.serviceName,
+.serviceText strong,
+.serviceText p,
+.serviceText span {
+    transition: color 0.3s;
+}
+
+@media (min-width: 900px) {
+    .serviceRow {
+        grid-template-columns: 70px 1.1fr 1fr;
+        align-items: center;
+        gap: 32px;
+        padding: 40px 28px;
+    }
+}
+
+/* ── Projets : cartes empilées ── */
+.stack {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.stackInner {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    border-radius: 28px;
+    overflow: hidden;
+    background-color: #0f0f0f;
+    border: 1px solid #1f1f1f;
+    box-shadow: 0 -20px 60px -30px rgba(0, 0, 0, 0.9);
+    transform-origin: top center;
+    transition: border-color 0.3s;
+}
+
+.stackInner:hover {
+    border-color: #10b98155;
+}
+
+.stackMedia {
+    position: relative;
+    min-height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 900px;
+    overflow: hidden;
+}
+
+.stackMedia img {
+    max-width: 100%;
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.stackMedia img.imgContain {
+    width: 62%;
+    height: 62%;
+    object-fit: contain;
+}
+
+/* Capture présentée comme une maquette inclinée en 3D */
+.stackMedia img.imgCover {
+    width: 84%;
+    height: 78%;
+    object-fit: cover;
+    object-position: top center;
+    border-radius: 14px;
+    box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6);
+    transform: rotateY(-12deg) rotateX(6deg) scale(0.94);
+}
+
+.stackInner:hover .stackMedia img.imgCover {
+    transform: none;
+}
+
+.stackInner:hover .stackMedia img.imgContain {
+    transform: scale(1.08);
+}
+
+.stackMedia i {
+    font-size: 6rem;
+    color: rgba(255, 255, 255, 0.9);
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.stackInner:hover .stackMedia i {
+    transform: scale(1.12) rotate(-6deg);
+}
+
+.stackContent {
+    display: flex;
+    flex-direction: column;
+    padding: 28px;
+}
+
+.stackMeta {
+    font-size: 0.78rem;
+    color: #10b981;
+    margin-bottom: 14px;
+}
+
+.stackContent h3 {
+    color: #fff;
+    font-size: clamp(1.4rem, 2.6vw, 2rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 12px;
+}
+
+.stackContent p {
+    font-size: 0.92rem;
+    color: #8a8a8a;
+    line-height: 1.65;
+    margin-bottom: 16px;
+}
+
+.stackArrow {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 2;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #10b981;
+    color: #000;
+    font-size: 1.1rem;
+    transform: rotate(-45deg);
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s;
+}
+
+.stackArrow:hover,
+.stackInner:hover .stackArrow {
+    transform: rotate(0deg) scale(1.08);
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+}
+
+@media (min-width: 900px) {
+    .stackCard {
+        position: sticky;
+    }
+
+    .stackInner {
+        grid-template-columns: 1.15fr 1fr;
+        min-height: 440px;
+    }
+
+    .stackMedia {
+        min-height: 100%;
+    }
+
+    .stackContent {
+        padding: 48px 44px;
+        justify-content: center;
+    }
+}
+
+/* ── Pied de page : nom géant en lettres creuses ── */
+.mainFooter {
+    overflow: hidden;
+}
+
+.footerGiant {
+    margin-top: 48px;
+    font-size: clamp(5rem, 24vw, 22rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.06em;
+    line-height: 0.78;
+    text-align: center;
+    white-space: nowrap;
+    color: transparent;
+    -webkit-text-stroke: 1px #2a2a2a;
+    user-select: none;
+    transition: -webkit-text-stroke-color 0.4s;
+}
+
+.footerGiant:hover {
+    -webkit-text-stroke-color: #10b981;
+}
+
+/* ── Moins d'animations si l'utilisateur l'a demandé ── */
+@media (prefers-reduced-motion: reduce) {
+
+    .sectionHeader,
+    .serviceRow,
+    .splitLetter {
+        opacity: 1;
+        transform: none;
+        animation: none;
+    }
+
+    .heroReady .splitLetter,
+    .marqueeTrack,
+    .waterLogo,
+    .wave,
+    .showcaseScan,
+    .showcasePhone {
+        animation: none;
+    }
+
+    .revealWords span {
+        color: #e5e5e5;
+    }
+}
+
+/* ── Couleurs Figma et WordPress ── */
+.textFigma {
+    color: #F24E1E;
+}
+
+.textWordpress {
+    color: #3B9FD1;
+}
+
+/* ── Vitrine : planche d'écrans mobiles, affichée en entier ── */
+.showcaseScreen img.showcaseImgApp {
+    object-fit: contain;
+    object-position: center;
+    background-color: #1e1e1e;
+    padding: 18px;
+    box-sizing: border-box;
+}
+
+/* ── Ajustements après vérification visuelle ── */
+.waterVisual {
+    min-height: 0;
+    aspect-ratio: 4 / 3.6;
+    align-self: start;
+}
+
+.waterLogo {
+    width: 46%;
+    max-width: 240px;
+    margin-bottom: 12%;
+}
+
+.wave {
+    height: 26%;
+}
+
+.waveBack {
+    height: 32%;
+}
+
+.serviceName {
+    font-size: clamp(2rem, 4.4vw, 3.6rem);
+}
+
+/* â”€â”€ StarPole : tÃ©lÃ©phone posÃ© sur la fenÃªtre du site â”€â”€ */
+.featuredVisual {
+    position: relative;
+    align-self: start;
+    margin-bottom: 40px;
+}
+
+.featuredVisual .browserFrame {
+    width: 100%;
+}
+
+.browserShot {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top left;
+}
+
+.featuredPhone {
+    right: -18px;
+    bottom: -40px;
+    width: 28%;
+    max-width: 170px;
+    border-width: 6px;
+    border-radius: 26px;
+}
+
+@media (max-width: 700px) {
+    .featuredPhone {
+        right: 4px;
+        bottom: -28px;
+        border-width: 4px;
+        border-radius: 18px;
+    }
+}
+
+/* StarPole : la capture du site s'affiche en entier, le téléphone se pose sur la photo */
+.featuredVisual .browserViewport {
+    aspect-ratio: 1884 / 836;
+}
+
+.featuredVisual .featuredPhone {
+    right: auto;
+    left: -18px;
+}
+
+@media (max-width: 700px) {
+    .featuredVisual .featuredPhone {
+        left: 4px;
+    }
+}
+
+.featuredVisual {
+    margin-bottom: 80px;
+}
+
+.featuredVisual .featuredPhone {
+    width: 21%;
+    bottom: -70px;
 }
